@@ -10,96 +10,128 @@
 :root {
   --primary: #2563eb;
   --danger: #ef4444;
-  --bg: #f3f4f6;
 }
 
 body {
+  margin: 0;
   font-family: 'Inter', sans-serif;
-  background: var(--bg);
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1e3a8a, #020617);
   display: flex;
   justify-content: center;
-  padding: 20px;
+  align-items: center;
 }
 
 /* ===== LOGIN ===== */
 .login-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.1);
-  width: 100%;
-  max-width: 380px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  padding: 2.2rem;
+  border-radius: 18px;
+  width: 360px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.15);
 }
 
 .login-card h2 {
+  color: #e5e7eb;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .login-card input {
   width: 100%;
   padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  outline: none;
+}
+
+.login-card input::placeholder {
+  color: #cbd5f5;
 }
 
 .login-card button {
   width: 100%;
   padding: 12px;
-  background: var(--primary);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .login-card p {
-  color: red;
+  color: #fca5a5;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 /* ===== ADMIN ===== */
 .admin-card {
+  display: none; /* QUAN TRỌNG */
   background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 500px;
-  display: none;
+  width: 520px;
+  height: 85vh;
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,.35);
+  display: flex;
+  flex-direction: column;
 }
 
-h2 { margin-top: 0; }
+.logout {
+  text-align: right;
+}
 
-input {
+.logout button {
+  border: none;
+  background: #e5e7eb;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-form {
+  background: #f9fafb;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+
+.admin-form input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
+  padding: 10px;
+  margin-bottom: 8px;
   border-radius: 8px;
-  margin-bottom: 10px;
+  border: 1px solid #d1d5db;
 }
 
 #saveBtn {
   width: 100%;
+  padding: 10px;
   background: var(--primary);
   color: white;
   border: none;
-  padding: 12px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
 }
 
-.item-list { margin-top: 15px; }
+.item-list {
+  flex: 1;
+  overflow-y: auto;
+}
 
 .manage-item {
   display: flex;
   justify-content: space-between;
-  background: #f9fafb;
-  padding: 10px;
+  background: #f3f4f6;
+  padding: 8px 12px;
   border-radius: 8px;
   margin-bottom: 6px;
 }
@@ -112,105 +144,10 @@ input {
   border-radius: 6px;
   cursor: pointer;
 }
-
-.logout {
-  text-align: right;
-  margin-bottom: 10px;
-}
-
-.logout button {
-  background: #e5e7eb;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-/* ===== LOGIN STYLE XỊN ===== */
-body {
-  background: radial-gradient(circle at top, #1e3a8a, #020617);
-}
-
-.login-card {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  padding: 2.2rem;
-  border-radius: 18px;
-  box-shadow: 0 20px 40px rgba(0,0,0,.35);
-  width: 100%;
-  max-width: 380px;
-  animation: loginShow .6s ease;
-  border: 1px solid rgba(255,255,255,.15);
-}
-
-@keyframes loginShow {
-  from { opacity: 0; transform: scale(.9); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.login-card h2 {
-  text-align: center;
-  margin-bottom: 22px;
-  color: #e5e7eb;
-  letter-spacing: 1px;
-}
-
-.login-card .input-box {
-  position: relative;
-  margin-bottom: 14px;
-}
-
-.login-card .input-box input {
-  width: 100%;
-  padding: 12px 14px 12px 42px;
+#searchBox {
+  padding: 10px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(255,255,255,.1);
-  color: #fff;
-  outline: none;
-  transition: .3s;
-}
-
-.login-card .input-box input::placeholder {
-  color: #cbd5f5;
-}
-
-.login-card .input-box input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59,130,246,.35);
-}
-
-.login-card .input-box span {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #93c5fd;
-  font-size: 1.1rem;
-}
-
-.login-card button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: .25s;
-}
-
-.login-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(59,130,246,.45);
-}
-
-.login-card p {
-  color: #fca5a5;
-  text-align: center;
-  margin-top: 12px;
+  border: 1px solid #d1d5db;
   font-size: .9rem;
 }
 </style>
@@ -234,38 +171,42 @@ body {
   </div>
 
   <h2>Thêm phần mềm</h2>
-  <input id="softname" placeholder="Tên phần mềm">
-  <input id="link" placeholder="Link tải">
-  <button id="saveBtn">LƯU DỮ LIỆU</button>
-  <div id="msg"></div>
 
-  <hr>
+  <div class="admin-form">
+    <input id="softname" placeholder="Tên phần mềm">
+    <input id="link" placeholder="Link tải">
+    <button id="saveBtn">LƯU DỮ LIỆU</button>
+  </div>
+<div class="admin-form">
+  <input id="searchBox" placeholder="🔍 Tìm phần mềm...">
+</div>
   <h3>Danh sách hiện có</h3>
-  <div id="manageList">Đang tải...</div>
+  <div id="manageList" class="item-list">Đang tải...</div>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-/* ===== LOGIN CONFIG ===== */
+/* ===== LOGIN ===== */
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "TTDT@2025";
 
-window.login = () => {
-  const u = user.value.trim().toLowerCase(); // KHÔNG phân biệt hoa thường
-  const p = pass.value;
+const loginBox = document.getElementById("loginBox");
+const adminBox = document.getElementById("adminBox");
 
-  if (u === ADMIN_USER && p === ADMIN_PASS) {
-    sessionStorage.setItem("adminLogin", "true");
-    showAdmin();
+window.login = () => {
+  if (
+    user.value.trim().toLowerCase() === ADMIN_USER &&
+    pass.value === ADMIN_PASS
+  ) {
+    sessionStorage.setItem("adminLogin", "1");
+    loginBox.style.display = "none";
+    adminBox.style.display = "flex";
   } else {
     loginMsg.innerText = "❌ Sai tài khoản hoặc mật khẩu";
   }
 };
 
-/* ENTER để đăng nhập */
-document.addEventListener("keydown", (e) => {
+/* ENTER để login */
+document.addEventListener("keydown", e => {
   if (e.key === "Enter" && loginBox.style.display !== "none") {
     login();
   }
@@ -276,16 +217,22 @@ window.logout = () => {
   location.reload();
 };
 
-function showAdmin() {
+/* Khi load trang */
+if (sessionStorage.getItem("adminLogin") === "1") {
   loginBox.style.display = "none";
-  adminBox.style.display = "block";
-}
-
-if (sessionStorage.getItem("adminLogin")) {
-  showAdmin();
+  adminBox.style.display = "flex";
+} else {
+  loginBox.style.display = "block";
+  adminBox.style.display = "none";
 }
 
 /* ===== FIREBASE ===== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore, collection, addDoc,
+  deleteDoc, doc, query, orderBy, onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCySHDY4nar2nzG6WdYMRDM8Y0aovVbJHQ",
   authDomain: "kkkk-29e4e.firebaseapp.com",
@@ -311,19 +258,41 @@ window.deleteItem = async (id) => {
   }
 };
 
+let allData = [];
+
 const q = query(collection(db, "download"), orderBy("time", "desc"));
-onSnapshot(q, (snap) => {
-  manageList.innerHTML = "";
+onSnapshot(q, snap => {
+  allData = [];
   snap.forEach(d => {
+    allData.push({ id: d.id, ...d.data() });
+  });
+  renderList(allData);
+});
+
+function renderList(data) {
+  manageList.innerHTML = "";
+  if (data.length === 0) {
+    manageList.innerHTML = "<i>Không có kết quả</i>";
+    return;
+  }
+  data.forEach(item => {
     manageList.innerHTML += `
       <div class="manage-item">
-        <span>${d.data().name}</span>
-        <button class="delete-btn" onclick="deleteItem('${d.id}')">XÓA</button>
+        <span>${item.name}</span>
+        <button class="delete-btn" onclick="deleteItem('${item.id}')">XÓA</button>
       </div>`;
   });
+}
+
+/* Tìm kiếm realtime */
+searchBox.addEventListener("input", () => {
+  const key = searchBox.value.toLowerCase();
+  const filtered = allData.filter(item =>
+    item.name.toLowerCase().includes(key)
+  );
+  renderList(filtered);
 });
 </script>
 
 </body>
-
 </html>

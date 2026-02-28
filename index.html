@@ -253,7 +253,7 @@ const ADMIN_USER = "admin";
 const ADMIN_PASS = "TTDT@2025";
 
 window.login = () => {
-  const u = user.value;
+  const u = user.value.trim().toLowerCase(); // KHÔNG phân biệt hoa thường
   const p = pass.value;
 
   if (u === ADMIN_USER && p === ADMIN_PASS) {
@@ -263,6 +263,13 @@ window.login = () => {
     loginMsg.innerText = "❌ Sai tài khoản hoặc mật khẩu";
   }
 };
+
+/* ENTER để đăng nhập */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && loginBox.style.display !== "none") {
+    login();
+  }
+});
 
 window.logout = () => {
   sessionStorage.removeItem("adminLogin");
@@ -318,4 +325,5 @@ onSnapshot(q, (snap) => {
 </script>
 
 </body>
+
 </html>

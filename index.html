@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Quản lý tải về</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #2563eb;
+  --danger: #ef4444;
+  --bg: #f3f4f6;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ===== LOGIN ===== */
+.login-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-card p {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* ===== ADMIN ===== */
+.admin-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 500px;
+  display: none;
+}
+
+h2 { margin-top: 0; }
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+#saveBtn {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.item-list { margin-top: 15px; }
+
+.manage-item {
+  display: flex;
+  justify-content: space-between;
+  background: #f9fafb;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: var(--danger);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.logout button {
+  background: #e5e7eb;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+/* ===== LOGIN STYLE XỊN ===== */
+body {
+  background: radial-gradient(circle at top, #1e3a8a, #020617);
+}
+
+.login-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 2.2rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.35);
+  width: 100%;
+  max-width: 380px;
+  animation: loginShow .6s ease;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+@keyframes loginShow {
+  from { opacity: 0; transform: scale(.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.login-card h2 {
+  text-align: center;
+  margin-bottom: 22px;
+  color: #e5e7eb;
+  letter-spacing: 1px;
+}
+
+.login-card .input-box {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.login-card .input-box input {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  outline: none;
+  transition: .3s;
+}
+
+.login-card .input-box input::placeholder {
+  color: #cbd5f5;
+}
+
+.login-card .input-box input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,.35);
+}
+
+.login-card .input-box span {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #93c5fd;
+  font-size: 1.1rem;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.login-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(59,130,246,.45);
+}
+
+.login-card p {
+  color: #fca5a5;
+  text-align: center;
+  margin-top: 12px;
+  font-size: .9rem;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login-card" id="loginBox">
+  <h2>Đăng nhập Admin</h2>
+  <input id="user" placeholder="Tài khoản">
+  <input id="pass" type="password" placeholder="Mật khẩu">
+  <button onclick="login()">ĐĂNG NHẬP</button>
+  <p id="loginMsg"></p>
+</div>
+
+<!-- ADMIN -->
+<div class="admin-card" id="adminBox">
+  <div class="logout">
+    <button onclick="logout()">Đăng xuất</button>
+  </div>
+
+  <h2>Thêm phần mềm</h2>
+  <input id="softname" placeholder="Tên phần mềm">
+  <input id="link" placeholder="Link tải">
+  <button id="saveBtn">LƯU DỮ LIỆU</button>
+  <div id="msg"></div>
+
+  <hr>
+  <h3>Danh sách hiện có</h3>
+  <div id="manageList">Đang tải...</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ===== LOGIN CONFIG ===== */
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "TTDT@2025";
+
+window.login = () => {
+  const u = user.value;
+  const p = pass.value;
+
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    sessionStorage.setItem("adminLogin", "true");
+    showAdmin();
+  } else {
+    loginMsg.innerText = "❌ Sai tài khoản hoặc mật khẩu";
+  }
+};
+
+window.logout = () => {
+  sessionStorage.removeItem("adminLogin");
+  location.reload();
+};
+
+function showAdmin() {
+  loginBox.style.display = "none";
+  adminBox.style.display = "block";
+}
+
+if (sessionStorage.getItem("adminLogin")) {
+  showAdmin();
+}
+
+/* ===== FIREBASE ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCySHDY4nar2nzG6WdYMRDM8Y0aovVbJHQ",
+  authDomain: "kkkk-29e4e.firebaseapp.com",
+  projectId: "kkkk-29e4e",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+saveBtn.onclick = async () => {
+  if (!softname.value || !link.value) return alert("Thiếu thông tin!");
+  await addDoc(collection(db, "download"), {
+    name: softname.value,
+    link: link.value,
+    time: Date.now()
+  });
+  softname.value = link.value = "";
+};
+
+window.deleteItem = async (id) => {
+  if (confirm("Xóa mục này?")) {
+    await deleteDoc(doc(db, "download", id));
+  }
+};
+
+const q = query(collection(db, "download"), orderBy("time", "desc"));
+onSnapshot(q, (snap) => {
+  manageList.innerHTML = "";
+  snap.forEach(d => {
+    manageList.innerHTML += `
+      <div class="manage-item">
+        <span>${d.data().name}</span>
+        <button class="delete-btn" onclick="deleteItem('${d.id}')">XÓA</button>
+      </div>`;
+  });
+});
+</script>
+
+</body>
+</html>

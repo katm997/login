@@ -75,8 +75,9 @@ body {
 .admin-card {
   display: none; /* QUAN TRỌNG */
   background: white;
-  width: 520px;
-  height: 85vh;
+  width: 90vw;
+  max-width: 1200px;
+  height: 90vh;
   border-radius: 18px;
   padding: 1.5rem;
   box-shadow: 0 20px 40px rgba(0,0,0,.35);
@@ -150,6 +151,34 @@ body {
   border: 1px solid #d1d5db;
   font-size: .9rem;
 }
+.manage-list h4 {
+  margin: 16px 0 6px;
+  color: #1e3a8a;
+  font-size: 1rem;
+  border-bottom: 1px solid #d1d5db;
+  padding-bottom: 4px;
+}
+.item-list h4 {
+  margin: 16px 0 6px;
+  color: #18015b;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #d1d5db;
+  padding-bottom: 4px;
+}
+.folder-header {
+  background: #e0e7ff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.folder-content {
+  margin-top: 6px;
+}
+
 </style>
 </head>
 
@@ -165,24 +194,42 @@ body {
 </div>
 
 <!-- ADMIN -->
+<!-- ADMIN -->
 <div class="admin-card" id="adminBox">
-  <div class="logout">
-    <button onclick="logout()">Đăng xuất</button>
-  </div>
+  <div style="display: flex; gap: 20px; height: 100%; width: 100%;">
+    
+    <!-- CỘT TRÁI: Form thêm phần mềm -->
+    <div style="flex: 1; display: flex; flex-direction: column;">
+      <div class="logout" style="text-align: left;">
+        <button onclick="logout()">Đăng xuất</button>
+      </div>
 
-  <h2>Thêm phần mềm</h2>
+      <h2>Thêm phần mềm</h2>
 
-  <div class="admin-form">
-    <input id="softname" placeholder="Tên phần mềm">
-    <input id="link" placeholder="Link tải">
-    <button id="saveBtn">LƯU DỮ LIỆU</button>
+      <div class="admin-form">
+        <input id="softname" placeholder="Tên phần mềm">
+        <input id="link" placeholder="Link tải">
+        <input id="folder" placeholder="Tên thư mục (folder)">
+        <button id="saveBtn">LƯU DỮ LIỆU</button>
+      </div>
+
+      <div class="admin-form">
+        <input id="searchBox" placeholder="🔍 Tìm phần mềm...">
+      </div>
+    </div>
+
+    <!-- CỘT PHẢI: Danh sách phần mềm -->
+    <div style="flex: 1; overflow-y: auto;">
+      <div class="admin-form">
+        <h3>📁 Danh sách phần mềm theo thư mục</h3>
+        <div id="manageList" class="item-list">Đang tải...</div>
+      </div>
+    </div>
+
   </div>
-<div class="admin-form">
-  <input id="searchBox" placeholder="🔍 Tìm phần mềm...">
 </div>
-  <h3>Danh sách hiện có</h3>
-  <div id="manageList" class="item-list">Đang tải...</div>
-</div>
+
+
 
 <script type="module">
 /* ===== LOGIN ===== */
@@ -191,6 +238,7 @@ const ADMIN_PASS = "TTDT@2025";
 
 const loginBox = document.getElementById("loginBox");
 const adminBox = document.getElementById("adminBox");
+
 
 window.login = () => {
   if (
@@ -243,14 +291,16 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 saveBtn.onclick = async () => {
-  if (!softname.value || !link.value) return alert("Thiếu thông tin!");
+  if (!softname.value || !link.value || !folder.value) return alert("Thiếu thông tin!");
   await addDoc(collection(db, "download"), {
     name: softname.value,
     link: link.value,
+    folder: folder.value,
     time: Date.now()
   });
-  softname.value = link.value = "";
+  softname.value = link.value = folder.value = "";
 };
+
 
 window.deleteItem = async (id) => {
   if (confirm("Xóa mục này?")) {
@@ -275,23 +325,52 @@ function renderList(data) {
     manageList.innerHTML = "<i>Không có kết quả</i>";
     return;
   }
+
+  const grouped = {};
   data.forEach(item => {
-    manageList.innerHTML += `
-      <div class="manage-item">
-        <span>${item.name}</span>
-        <button class="delete-btn" onclick="deleteItem('${item.id}')">XÓA</button>
-      </div>`;
+    const folder = item.folder || "Khác";
+    if (!grouped[folder]) grouped[folder] = [];
+    grouped[folder].push(item);
   });
+
+  for (const folder in grouped) {
+    const folderId = folder.replace(/\s+/g, "_"); // tạo id không dấu cách
+    manageList.innerHTML += `
+      <div class="folder-group">
+        <div class="folder-header" onclick="toggleFolder('${folderId}')">
+          <strong>📁 ${folder}</strong>
+        </div>
+        <div class="folder-content" id="folder-${folderId}">
+          ${grouped[folder].map(item => `
+            <div class="manage-item">
+              <span>${item.name}</span>
+              <button class="delete-btn" onclick="deleteItem('${item.id}')">XÓA</button>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
 }
+
+
 
 /* Tìm kiếm realtime */
 searchBox.addEventListener("input", () => {
   const key = searchBox.value.toLowerCase();
   const filtered = allData.filter(item =>
-    item.name.toLowerCase().includes(key)
+    item.name.toLowerCase().includes(key) ||
+    (item.folder && item.folder.toLowerCase().includes(key))
   );
   renderList(filtered);
 });
+window.toggleFolder = (id) => {
+  const el = document.getElementById("folder-" + id);
+  if (el) {
+    el.style.display = el.style.display === "none" ? "block" : "none";
+  }
+};
+
 </script>
 
 </body>

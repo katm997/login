@@ -118,8 +118,8 @@
     <div class="login-card">
       <i class="fas fa-user-shield" style="font-size: 40px; color: var(--accent); margin-bottom: 20px;"></i>
       <h2>Đăng nhập Admin</h2>
-      <input id="user" placeholder="Account">
-      <input id="pass" type="password" placeholder="Password">
+      <input id="user" placeholder="Account" onkeyup="if(event.key === 'Enter') login()">
+      <input id="pass" type="password" placeholder="Password" onkeyup="if(event.key === 'Enter') login()">
       <button onclick="login()">Đăng nhập</button>
       <p id="loginMsg" style="color: #fca5a5; margin-top: 15px; font-size: 13px;"></p>
     </div>
@@ -375,3 +375,4 @@
   </script>
 </body>
 </html>
+

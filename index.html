@@ -340,7 +340,7 @@ function renderList(data) {
         <div class="folder-header" onclick="toggleFolder('${folderId}')">
           <strong>📁 ${folder}</strong>
         </div>
-        <div class="folder-content" id="folder-${folderId}">
+        <div class="folder-content" id="folder-${folderId}" style="display:none">
           ${grouped[folder].map(item => `
             <div class="manage-item">
               <span>${item.name}</span>
@@ -375,3 +375,4 @@ window.toggleFolder = (id) => {
 
 </body>
 </html>
+

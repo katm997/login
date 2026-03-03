@@ -108,7 +108,36 @@
     .stats-table th { text-align: left; background: #f8fafc; padding: 15px; border-bottom: 2px solid #e2e8f0; }
     .stats-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; }
     .badge-count { background: #f0fdf4; color: #166534; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; }
+    /* 1. Mặc định là hiện, khi có class .hidden thì ẩn đi */
+.folder-content {
+  display: block;
+}
+.folder-content.hidden {
+  display: none;
+}
 
+/* 2. Làm cho tiêu đề thư mục đẹp hơn và có hình bàn tay khi rà chuột vào */
+.folder-title {
+  cursor: pointer; 
+  user-select: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.folder-title:hover {
+  background: rgba(45, 212, 191, 0.1); /* Màu xanh nhạt khi rà chuột */
+}
+
+/* 3. Hiệu ứng xoay mũi tên */
+.folder-title i.fa-chevron-down {
+  transition: transform 0.3s;
+}
+.rotate-icon {
+  transform: rotate(-90deg);
+}
   </style>
 </head>
 
@@ -119,7 +148,7 @@
       <i class="fas fa-user-shield" style="font-size: 40px; color: var(--accent); margin-bottom: 20px;"></i>
       <h2>Đăng nhập Admin</h2>
       <input id="user" placeholder="Account" onkeyup="if(event.key === 'Enter') login()">
-      <input id="pass" type="password" placeholder="Password" onkeyup="if(event.key === 'Enter') login()">
+<input id="pass" type="password" placeholder="Password" onkeyup="if(event.key === 'Enter') login()">
       <button onclick="login()">Đăng nhập</button>
       <p id="loginMsg" style="color: #fca5a5; margin-top: 15px; font-size: 13px;"></p>
     </div>
@@ -243,44 +272,73 @@
 
     // RENDER LIST QUẢN LÝ
     function renderList(data) {
-      const container = document.getElementById("manageList");
-      container.innerHTML = "";
-      const grouped = {};
-      data.forEach(item => {
-        const f = item.folder || "Chưa phân loại";
-        if (!grouped[f]) grouped[f] = [];
-        grouped[f].push(item);
-      });
+  const container = document.getElementById("manageList");
+  container.innerHTML = "";
+  
+  // Bước A: Gom nhóm dữ liệu theo thư mục
+  const grouped = {};
+  data.forEach(item => {
+    const f = item.folder || "Chưa phân loại";
+    if (!grouped[f]) grouped[f] = [];
+    grouped[f].push(item);
+  });
 
-      for (const folder in grouped) {
-        const section = document.createElement("div");
-        section.className = "folder-section";
-        section.innerHTML = `
-          <div class="folder-title"><i class="fas fa-folder-open"></i> ${folder} (${grouped[folder].length})</div>
-          <div class="manage-grid">
-            ${grouped[folder].map(item => `
-              <div class="manage-item">
-                <div class="item-info">
-                  <h4>${item.name}</h4>
-                  <p><i class="fas fa-link"></i> ${item.link.substring(0, 30)}...</p>
-                </div>
-                <div class="action-btns">
-                  <button class="btn-icon btn-edit" onclick="editMode('${item.id}', '${item.name.replace(/'/g,"\\'")}', '${item.link.replace(/'/g,"\\'")}', '${item.folder.replace(/'/g,"\\'")}')">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn-icon btn-delete" onclick="deleteItem('${item.id}')">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            `).join("")}
+  // Bước B: Chạy vòng lặp để tạo giao diện cho từng thư mục
+  for (const folder in grouped) {
+    const section = document.createElement("div");
+    section.className = "folder-section";
+    
+    // Tạo một ID ngẫu nhiên để máy tính biết chính xác đang đóng/mở thư mục nào
+    const folderId = "folder-" + Math.random().toString(36).substr(2, 9);
+
+    section.innerHTML = `
+      <div class="folder-title" onclick="toggleFolder('${folderId}', '${folder.replace(/'/g,"\\'")}')">
+        <i class="fas fa-chevron-down" id="icon-${folderId}"></i> 
+        <span style="font-weight:700;">${folder}</span> (${grouped[folder].length})
+      </div>
+      
+      <div class="manage-grid folder-content" id="${folderId}">
+        ${grouped[folder].map(item => `
+          <div class="manage-item">
+            <div class="item-info">
+              <h4>${item.name}</h4>
+              <p><i class="fas fa-link"></i> ${item.link.substring(0, 30)}...</p>
+            </div>
+            <div class="action-btns">
+              <button class="btn-icon btn-edit" onclick="editMode('${item.id}', '${item.name.replace(/'/g,"\\'")}', '${item.link.replace(/'/g,"\\'")}', '${item.folder.replace(/'/g,"\\'")}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-icon btn-delete" onclick="deleteItem('${item.id}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
           </div>
-        `;
-        container.appendChild(section);
-      }
-    }
+        `).join("")}
+      </div>
+    `;
+    container.appendChild(section);
+  }
+}
+// Hàm này xử lý: 1. Điền tên thư mục - 2. Đóng mở danh sách
+window.toggleFolder = (id, folderName) => {
+  const content = document.getElementById(id);
+  const icon = document.getElementById('icon-' + id);
+  const folderInput = document.getElementById('folder');
 
-    // RENDER THỐNG KÊ
+  
+  folderInput.value = folderName;
+  folderInput.focus(); 
+
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden'); 
+    icon.classList.remove('rotate-icon'); 
+  } else {
+    content.classList.add('hidden'); 
+    icon.classList.add('rotate-icon'); 
+  }
+};
+   
     function renderStats() {
       const tbody = document.getElementById("statsTableBody");
       const sorted = [...allData].sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
@@ -375,4 +433,3 @@
   </script>
 </body>
 </html>
-

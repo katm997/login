@@ -237,6 +237,7 @@
 
 
   <script type="module">
+    let editId = null;
     /* ===== LOGIN ===== */
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "TTDT@2025";
@@ -280,6 +281,7 @@
     }
 
     /* ===== FIREBASE ===== */
+    import { updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import {
       getFirestore, collection, addDoc,
@@ -295,16 +297,37 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    saveBtn.onclick = async () => {
-      if (!softname.value || !link.value || !folder.value) return alert("Thiếu thông tin!");
-      await addDoc(collection(db, "download"), {
-        name: softname.value,
-        link: link.value,
-        folder: folder.value,
-        time: Date.now()
-      });
-      softname.value = link.value = folder.value = "";
-    };
+   saveBtn.onclick = async () => {
+  if (!softname.value || !link.value || !folder.value) {
+    alert("Thiếu thông tin!");
+    return;
+  }
+
+  // 🔁 ĐANG SỬA
+  if (window.editingId) {
+    await updateDoc(doc(db, "download", window.editingId), {
+      name: softname.value,
+      link: link.value,
+      folder: folder.value,
+      time: Date.now()
+    });
+
+    window.editingId = null;
+  }
+  // ➕ THÊM MỚI
+  else {
+    await addDoc(collection(db, "download"), {
+      name: softname.value,
+      link: link.value,
+      folder: folder.value,
+      time: Date.now()
+    });
+  }
+
+  softname.value = "";
+  link.value = "";
+  folder.value = "";
+};
 
 
     window.deleteItem = async (id) => {
@@ -312,6 +335,18 @@
         await deleteDoc(doc(db, "download", id));
       }
     };
+   window.editItem = (id, name, link, folder) => {
+  document.getElementById("softname").value = name;
+  document.getElementById("link").value = link;
+  document.getElementById("folder").value = folder;
+
+  window.editingId = id;
+
+  // 🔁 đổi chữ nút
+  document.getElementById("saveBtn").innerText = "CẬP NHẬT";
+
+  document.getElementById("softname").focus();
+};
 
     let allData = [];
 
@@ -358,12 +393,27 @@
              id="folder-${folderId}"
              style="display:${displayStyle}">
           ${grouped[folder].map(item => `
-            <div class="manage-item">
-              <span>${item.name}</span>
-              <button class="delete-btn"
-                onclick="deleteItem('${item.id}')">XÓA</button>
-            </div>
-          `).join("")}
+  <div class="manage-item">
+    <span>${item.name}</span>
+
+    <div style="display:flex; gap:6px">
+      <button class="edit-btn"
+        onclick="editItem(
+          '${item.id}',
+          '${item.name.replace(/'/g,"\\'")}',
+          '${item.link.replace(/'/g,"\\'")}',
+          '${item.folder.replace(/'/g,"\\'")}'
+        )">
+        SỬA
+      </button>
+
+      <button class="delete-btn"
+        onclick="deleteItem('${item.id}')">
+        XÓA
+      </button>
+    </div>
+  </div>
+`).join("")}
         </div>
       </div>
     `;
